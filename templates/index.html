@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#061b12">
+  <meta name="description" content="CarbonWise — area-level carbon emission prediction using Elastic Net Regression.">
+  <title>CarbonWise | Area Carbon Intelligence</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <!-- Premium animated environment. Canvas is rendered at high DPI for sharp 2K/4K displays. -->
+  <div class="environment" aria-hidden="true">
+    <canvas id="carbonCanvas"></canvas>
+    <div class="ambient ambient-1"></div>
+    <div class="ambient ambient-2"></div>
+    <div class="ambient ambient-3"></div>
+    <div class="mist mist-1"></div>
+    <div class="mist mist-2"></div>
+    <div class="stars"></div>
+    <div class="sun-glow"><span></span></div>
+    <div class="mountains mountains-back"></div>
+    <div class="mountains mountains-front"></div>
+    <div class="forest" id="forest"></div>
+    <div class="environment-vignette"></div>
+  </div>
+
+  <header class="navbar">
+    <div class="container nav-inner">
+      <a class="logo" href="#home" aria-label="CarbonWise home">Carbon<span>Wise</span></a>
+      <nav class="navlinks" id="navLinks" aria-label="Main navigation">
+        <a href="#home">Home</a>
+        <a href="#predict">Predict</a>
+        <a href="#how">How It Works</a>
+        <a href="#impact">Impact</a>
+      </nav>
+      <a class="nav-cta" href="#predict">Predict Now</a>
+      <button class="menu-btn" id="menuBtn" aria-label="Open menu" aria-expanded="false">☰</button>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero" id="home">
+      <div class="hero-grid container">
+        <div class="hero-copy reveal visible">
+          <div class="eyebrow"><span class="pulse-dot"></span> AREA-LEVEL CARBON INTELLIGENCE</div>
+          <h1>Understand Your Area's <span>Carbon Impact</span></h1>
+          <p class="hero-description">CarbonWise uses machine learning to estimate area-level carbon emissions from population, electricity, fuel and transport activity.</p>
+          <div class="hero-actions">
+            <a class="btn btn-primary" href="#predict">Predict Emissions <span>↗</span></a>
+            <a class="btn btn-secondary" href="#how">How It Works <span>↓</span></a>
+          </div>
+          <div class="hero-stats">
+            <div><strong>4</strong><span>Area inputs</span></div>
+            <i></i>
+            <div><strong>ML</strong><span>Prediction model</span></div>
+            <i></i>
+            <div><strong>CO₂e</strong><span>Monthly estimate</span></div>
+          </div>
+        </div>
+        <div class="hero-orbit" aria-hidden="true">
+          <div class="orbit-ring ring-1"></div>
+          <div class="orbit-ring ring-2"></div>
+          <div class="orbit-ring ring-3"></div>
+          <div class="orbit-core"><span>CO₂</span><small>AREA SIGNAL</small></div>
+          <div class="orbit-node node-1">⚡</div>
+          <div class="orbit-node node-2">🚗</div>
+          <div class="orbit-node node-3">🌿</div>
+        </div>
+      </div>
+      <div class="scroll-cue"><span></span> Explore the model</div>
+    </section>
+
+    <section class="section predict-section" id="predict">
+      <div class="container">
+        <div class="section-heading reveal">
+          <div class="section-label">Carbon Prediction Engine</div>
+          <h2>Calculate Your Area's <span>Carbon Emissions</span></h2>
+          <p>Enter four simple activity values. CarbonWise sends them to the trained Elastic Net model and returns an educational monthly estimate.</p>
+        </div>
+
+        <div class="predict-layout">
+          <div class="glass-card reveal">
+            <div class="card-heading">
+              <div><div class="mini-label">INPUT PANEL</div><h3>Area Activity Data</h3></div>
+              <span class="status-dot">LIVE</span>
+            </div>
+            <form id="emissionForm">
+              <div class="field">
+                <div class="field-top"><label for="population">👥 Area Population</label><output id="populationValue">100 people</output></div>
+                <input class="range" id="population" type="range" min="1" max="1000" step="1" value="100">
+                <div class="range-scale"><span>1</span><span>1,000 people</span></div>
+              </div>
+              <div class="field">
+                <div class="field-top"><label for="electricity">⚡ Electricity Consumption</label><output id="electricityValue">500 MWh/month</output></div>
+                <input class="range" id="electricity" type="range" min="10" max="100000" step="10" value="500">
+                <div class="range-scale"><span>10</span><span>100,000 MWh/month</span></div>
+              </div>
+              <div class="field">
+                <div class="field-top"><label for="fuel">⛽ Fuel Consumption</label><output id="fuelValue">1,000 litres/month</output></div>
+                <input class="range" id="fuel" type="range" min="100" max="50000" step="100" value="1000">
+                <div class="range-scale"><span>100</span><span>50,000 litres/month</span></div>
+              </div>
+              <div class="field">
+                <div class="field-top"><label for="transport">🚗 Transport Activity</label><output id="transportValue">10,000 vehicle-km/month</output></div>
+                <input class="range" id="transport" type="range" min="1000" max="5000000" step="1000" value="10000">
+                <div class="range-scale"><span>1,000</span><span>5,000,000 vehicle-km/month</span></div>
+              </div>
+              <button class="predict-btn" id="predictBtn" type="submit"><span>🌿</span> Predict My Area Carbon Emissions <b>↗</b></button>
+            </form>
+          </div>
+
+          <div class="glass-card result-card reveal">
+            <div class="result-top"><div><div class="mini-label">MODEL OUTPUT</div><h3>Estimated Carbon Emissions</h3></div><span class="model-chip">Elastic Net</span></div>
+            <div class="result-number" id="prediction">—</div>
+            <div class="result-unit" id="unit">tonnes CO₂e / month</div>
+            <div class="category" id="category">Waiting for prediction</div>
+            <div class="gauge-wrap"><div class="gauge" id="gauge"><div class="gauge-inner"><strong id="gaugeText">0%</strong><span>relative scale</span></div></div></div>
+            <div class="breakdown-title"><span>INPUT SNAPSHOT</span><span>VALUE</span></div>
+            <div class="breakdown">
+              <div class="bar-row"><span>Population</span><div class="bar"><i id="barPopulation"></i></div><b id="bdPopulation">—</b></div>
+              <div class="bar-row"><span>Electricity</span><div class="bar"><i id="barElectricity"></i></div><b id="bdElectricity">—</b></div>
+              <div class="bar-row"><span>Fuel</span><div class="bar"><i id="barFuel"></i></div><b id="bdFuel">—</b></div>
+              <div class="bar-row"><span>Transport</span><div class="bar"><i id="barTransport"></i></div><b id="bdTransport">—</b></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section how-section" id="how">
+      <div class="container">
+        <div class="section-heading reveal"><div class="section-label">Simple Workflow</div><h2>How <span>CarbonWise</span> Works</h2><p>The website, Flask backend and saved machine-learning pipeline work together in four simple steps.</p></div>
+        <div class="steps-grid">
+          <article class="step-card reveal"><div class="step-no">01</div><div class="step-icon">⌁</div><h3>Enter Area Data</h3><p>Give the population, electricity, fuel and transport values for the area.</p></article>
+          <article class="step-card reveal"><div class="step-no">02</div><div class="step-icon">✓</div><h3>Check Inputs</h3><p>Flask checks that every value is a valid number and inside the allowed range.</p></article>
+          <article class="step-card reveal"><div class="step-no">03</div><div class="step-icon">AI</div><h3>Run the Model</h3><p>The saved pipeline prepares the data, scales it and runs Elastic Net Regression.</p></article>
+          <article class="step-card reveal"><div class="step-no">04</div><div class="step-icon">↗</div><h3>View the Result</h3><p>The prediction, category and input snapshot are shown on the dashboard.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section architecture-section">
+      <div class="container">
+        <div class="section-heading reveal"><div class="section-label">System Flow</div><h2>From <span>Input</span> to Prediction</h2><p>A simple layered flow connects the interface to the saved ML pipeline.</p></div>
+        <div class="architecture reveal">
+          <div class="arch-box"><small>01</small><strong>USER</strong><span>Area values</span></div><div class="arch-arrow">→</div>
+          <div class="arch-box"><small>02</small><strong>FRONTEND</strong><span>HTML / CSS / JS</span></div><div class="arch-arrow">→</div>
+          <div class="arch-box"><small>03</small><strong>FLASK</strong><span>/predict API</span></div><div class="arch-arrow">→</div>
+          <div class="arch-box"><small>04</small><strong>ML PIPELINE</strong><span>Scale + Elastic Net</span></div><div class="arch-arrow">→</div>
+          <div class="arch-box highlight"><small>05</small><strong>RESULT</strong><span>Tonnes CO₂e/month</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section impact-section" id="impact">
+      <div class="container impact-panel reveal">
+        <div class="impact-copy"><div class="section-label">A Small Step Matters</div><h2>Better awareness.<br><span>Smarter choices.</span></h2><p>CarbonWise is an academic prototype that shows how machine learning can turn activity data into an easy-to-understand carbon estimate.</p><a class="btn btn-primary" href="#predict">Try the Calculator <span>↗</span></a></div>
+        <div class="impact-stats"><div><strong>4</strong><span>Area inputs</span></div><div><strong>ML</strong><span>Prediction model</span></div><div><strong>24/7</strong><span>Local prototype</span></div><div><strong>CO₂e</strong><span>Monthly output</span></div></div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="footer"><div class="container footer-inner"><a class="logo" href="#home">Carbon<span>Wise</span></a><span>Student ML Project · 2026</span><div class="footer-links"><a href="#home">Home</a><a href="#predict">Predict</a><a href="#how">How It Works</a></div></div></footer>
+
+  <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
